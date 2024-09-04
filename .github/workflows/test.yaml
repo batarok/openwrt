@@ -1,0 +1,35 @@
+name: Build OpenWrt
+
+on:
+  push:
+    branches:
+      - openwrt-23.05
+  pull_request:
+    branches:
+      - openwrt-23.05
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential libncurses5-dev zlib1g-dev gawk gcc-multilib flex gettext wget unzip python3
+
+    - name: Build OpenWrt
+      run: |
+        ./scripts/feeds update -a
+        ./scripts/feeds install -a
+        make defconfig  # Sesuaikan konfigurasi jika diperlukan
+        make -j$(nproc)
+      
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: firmware
+        path: bin/targets/  # Ubah jika perlu
