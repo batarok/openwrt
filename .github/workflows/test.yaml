@@ -16,16 +16,16 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Set up dependencies
+    - name: kebutuhan dependens
       run: |
-        sudo apt-get update
-        sudo apt-get install -y build-essential libncurses5-dev zlib1g-dev gawk gcc-multilib flex gettext wget unzip python3
+        sudo apt update
+        sudo apt install -y build-essential libncurses5-dev zlib1g-dev gawk gcc-multilib flex gettext wget unzip python3
 
-    - name: Build OpenWrt
+    - name: Update OpenWrt
       run: |
         ./scripts/feeds update -a
         ./scripts/feeds install -a
-        #make defconfig  # Sesuaikan konfigurasi jika diperlukan
+        make defconfig  # Sesuaikan konfigurasi jika diperlukan
         make -j$(nproc)
       
     - name: Upload build artifacts
